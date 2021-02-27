@@ -3,7 +3,7 @@ import "./Node.css";
 
 class Node extends React.Component {
   render() {
-    const { key, node, onMouseDown, onMouseEnter, onMouseUp } = this.props;
+    const { node, onMouseDown, onMouseEnter, onMouseUp } = this.props;
     const { row, col, isStart, isFinish, isVisited2, isWall } = node;
 
     const style = isStart

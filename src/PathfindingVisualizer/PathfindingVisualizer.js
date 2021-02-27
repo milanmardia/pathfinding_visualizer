@@ -76,11 +76,13 @@ class PathfindingVisualizer extends React.Component {
         };
         newGrid[node.row][node.col] = newNode;
         this.setState({ grid: newGrid });
-      }, 25 * i);
+      }, 50 * i);
     }
   }
 
   visualizeDFS() {
+    const newGrid = resetGrid(this.state.nodes);
+    this.setState({ nodes: newGrid });
     const { nodes } = this.state;
     const startNode = nodes[this.state.startRow][this.state.startCol];
     const path = depthFirstSearch(nodes, startNode);
@@ -99,8 +101,14 @@ class PathfindingVisualizer extends React.Component {
     const { nodes } = this.state;
     return (
       <div>
-        <button onClick={() => this.visualizeDFS()}> DFS </button>
-        <button onClick={() => this.visualizeBFS()}> BFS </button>
+        <button className="button" onClick={() => this.visualizeDFS()}>
+          {" "}
+          DFS{" "}
+        </button>
+        <button className="button" onClick={() => this.visualizeBFS()}>
+          {" "}
+          BFS{" "}
+        </button>
         <div className="grid">
           {nodes.map((row, rowIdx) => {
             return (
@@ -139,6 +147,21 @@ const createGrid = () => {
   return nodes;
 };
 
+const resetGrid = (grid) => {
+  const newGrid = grid.slice();
+  for (let row = 0; row < grid.length; row++) {
+    for (let col = 0; col < grid[row].length; col++) {
+      const node = grid[row][col];
+      const newNode = {
+        ...node,
+        isVisited1: false,
+        isVisited2: false,
+      };
+      newGrid[row][col] = newNode;
+    }
+  }
+  return newGrid;
+};
 const createNode = (col, row) => {
   return {
     row,
