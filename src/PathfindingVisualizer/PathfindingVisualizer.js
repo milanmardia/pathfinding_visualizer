@@ -9,11 +9,14 @@ class PathfindingVisualizer extends React.Component {
     super();
     this.state = {
       nodes: [],
+      shortestPath: [],
       mouseIsPressed: false,
       startChosen: false,
       endChosen: false,
       startRow: 0,
       startCol: 0,
+      endRow: 0,
+      endCol: 0,
     };
   }
 
@@ -35,7 +38,13 @@ class PathfindingVisualizer extends React.Component {
       });
     } else if (!this.state.endChosen) {
       newGrid = getNewGridFinish(this.state.nodes, row, col);
-      this.setState({ nodes: newGrid, mouseIsPressed: true, endChosen: true });
+      this.setState({
+        nodes: newGrid,
+        mouseIsPressed: true,
+        endChosen: true,
+        endRow: row,
+        endCol: col,
+      });
     } else {
       const newGrid = getNewGridWall(this.state.nodes, row, col);
       this.setState({ nodes: newGrid, mouseIsPressed: true });
@@ -58,14 +67,20 @@ class PathfindingVisualizer extends React.Component {
       });
     } else if (!this.state.endChosen) {
       newGrid = getNewGridFinish(this.state.nodes, row, col);
-      this.setState({ nodes: newGrid, mouseIsPressed: true, endChosen: true });
+      this.setState({
+        nodes: newGrid,
+        mouseIsPressed: true,
+        endChosen: true,
+        endRow: row,
+        endCol: col,
+      });
     } else {
       const newGrid = getNewGridWall(this.state.nodes, row, col);
       this.setState({ nodes: newGrid, mouseIsPressed: true });
     }
   }
 
-  animate(path) {
+  animate(path, shortestPath) {
     for (let i = 0; i < path.length; i++) {
       setTimeout(() => {
         const node = path[i];
@@ -76,8 +91,26 @@ class PathfindingVisualizer extends React.Component {
         };
         newGrid[node.row][node.col] = newNode;
         this.setState({ grid: newGrid });
-      }, 50 * i);
+      }, 25 * i);
     }
+  }
+
+  animatePath() {
+    setTimeout(() => {
+      const { shortestPath } = this.state;
+      for (let i = 0; i < shortestPath.length; i++) {
+        setTimeout(() => {
+          const node = shortestPath[i];
+          const newGrid = this.state.nodes.slice();
+          const newNode = {
+            ...node,
+            isPath: true,
+          };
+          newGrid[node.row][node.col] = newNode;
+          this.setState({ grid: newGrid });
+        }, 50 * i);
+      }
+    });
   }
 
   visualizeDFS() {
@@ -85,15 +118,22 @@ class PathfindingVisualizer extends React.Component {
     this.setState({ nodes: newGrid });
     const { nodes } = this.state;
     const startNode = nodes[this.state.startRow][this.state.startCol];
+    const finishNode = nodes[this.state.endRow][this.state.endCol];
     const path = depthFirstSearch(nodes, startNode);
+    const shortestPath = generatePathList(finishNode);
+    this.setState({ shortestPath });
     this.animate(path);
   }
 
   visualizeBFS() {
+    const newGrid = resetGrid(this.state.nodes);
+    this.setState({ nodes: newGrid });
     const { nodes } = this.state;
     const startNode = nodes[this.state.startRow][this.state.startCol];
+    const finishNode = nodes[this.state.endRow][this.state.endCol];
     const path = breadthFirstSearch(nodes, startNode);
-    console.log(path);
+    const shortestPath = generatePathList(finishNode);
+    this.setState({ shortestPath });
     this.animate(path);
   }
 
@@ -108,6 +148,10 @@ class PathfindingVisualizer extends React.Component {
         <button className="button" onClick={() => this.visualizeBFS()}>
           {" "}
           BFS{" "}
+        </button>
+        <button className="button" onClick={() => this.animatePath()}>
+          {" "}
+          shortestPath{" "}
         </button>
         <div className="grid">
           {nodes.map((row, rowIdx) => {
@@ -140,7 +184,7 @@ const createGrid = () => {
   for (let row = 0; row < 20; row++) {
     const currentRow = [];
     for (let col = 0; col < 50; col++) {
-      currentRow.push(createNode(col, row));
+      currentRow.push(createNode(row, col));
     }
     nodes.push(currentRow);
   }
@@ -156,20 +200,23 @@ const resetGrid = (grid) => {
         ...node,
         isVisited1: false,
         isVisited2: false,
+        isPath: false,
       };
       newGrid[row][col] = newNode;
     }
   }
   return newGrid;
 };
-const createNode = (col, row) => {
+const createNode = (row, col) => {
   return {
     row,
     col,
+    parent: [],
     isStart: false,
     isFinish: false,
     isVisited1: false,
     isVisited2: false,
+    isPath: false,
     isWall: false,
   };
 };
@@ -205,6 +252,19 @@ const getNewGridFinish = (grid, row, col) => {
   };
   newGrid[row][col] = newNode;
   return newGrid;
+};
+
+const generatePathList = (finishNode) => {
+  const path = [];
+  var currentNode = finishNode;
+
+  while (!currentNode.isStart) {
+    path.push(currentNode);
+    currentNode = currentNode.parent[0];
+  }
+  path.reverse();
+  console.log("BFs");
+  return path;
 };
 
 export default PathfindingVisualizer;

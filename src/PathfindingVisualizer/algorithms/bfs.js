@@ -38,12 +38,12 @@ function breadthFirstSearch(grid, startNode) {
       allVisited.push(node);
       node.isVisited1 = true;
       if (node.isFinish) {
-        console.log("ending");
         return allVisited;
       }
       const successors = getSuccessors(node, grid);
       for (const successor of successors) {
         const child = successor;
+        child.parent.push(node);
         unvisited.push(child);
       }
     }

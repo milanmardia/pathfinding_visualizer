@@ -4,7 +4,7 @@ import "./Node.css";
 class Node extends React.Component {
   render() {
     const { node, onMouseDown, onMouseEnter, onMouseUp } = this.props;
-    const { row, col, isStart, isFinish, isVisited2, isWall } = node;
+    const { row, col, isStart, isFinish, isVisited2, isWall, isPath } = node;
 
     const style = isStart
       ? "isStart"
@@ -12,6 +12,8 @@ class Node extends React.Component {
       ? "isFinish"
       : isWall
       ? "isWall"
+      : isPath
+      ? "isPath"
       : isVisited2
       ? "isVisited"
       : "";
