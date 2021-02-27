@@ -151,7 +151,7 @@ class PathfindingVisualizer extends React.Component {
         </button>
         <button className="button" onClick={() => this.animatePath()}>
           {" "}
-          shortestPath{" "}
+          shorstPath{" "}
         </button>
         <div className="grid">
           {nodes.map((row, rowIdx) => {
