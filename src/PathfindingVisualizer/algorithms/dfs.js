@@ -41,7 +41,7 @@ function depthFirstSearch(grid, startNode) {
     const successors = getSuccessors(node, grid);
     for (let i = 0; i < successors.length; i++) {
       const child = successors[i];
-      if (!child.isVisited1) {
+      if (!child.isVisited1 && !child.isWall) {
         unvisited.push(child);
       }
     }

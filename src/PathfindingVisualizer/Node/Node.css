@@ -12,6 +12,9 @@
 .isStart {
   background-color: green;
 }
+.isWall {
+  background-color: black;
+}
 
 .isVisited {
   animation-name: visitedAnimation;
