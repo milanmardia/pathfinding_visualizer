@@ -46,6 +46,7 @@ function depthFirstSearch(grid, startNode) {
       }
     }
   }
+  return allVisited;
 }
 
 function getSuccessors(node, grid) {

@@ -34,8 +34,6 @@ function breadthFirstSearch(grid, startNode) {
   while (unvisited.length > 0) {
     const node = unvisited.shift();
 
-    console.log(!node.isVisited1);
-
     if (!node.isVisited1 && !node.isWall) {
       allVisited.push(node);
       node.isVisited1 = true;
@@ -50,6 +48,7 @@ function breadthFirstSearch(grid, startNode) {
       }
     }
   }
+  return allVisited;
 }
 
 function getSuccessors(node, grid) {

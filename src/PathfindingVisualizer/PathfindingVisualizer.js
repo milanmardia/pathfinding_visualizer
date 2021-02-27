@@ -44,7 +44,7 @@ class PathfindingVisualizer extends React.Component {
         };
         newGrid[node.row][node.col] = newNode;
         this.setState({ grid: newGrid });
-      }, 100 * i);
+      }, 25 * i);
     }
   }
 
