@@ -192,7 +192,7 @@ class PathfindingVisualizer extends React.Component {
         </button>
         <button className="button" onClick={() => this.animatePath()}>
           {" "}
-          shortestPath{" "}
+          Find Path{" "}
         </button>
         <button className="button" onClick={() => this.reset()}>
           {" "}
@@ -242,6 +242,7 @@ const resetGrid = (grid) => {
       const node = grid[row][col];
       const newNode = {
         ...node,
+        parent: [],
         isVisited1: false,
         isVisited2: false,
         isPath: false,
@@ -258,6 +259,7 @@ const resetGrid1 = (grid) => {
       const node = grid[row][col];
       const newNode = {
         ...node,
+        parent: [],
         isStart: false,
         isFinish: false,
         isVisited1: false,
@@ -321,7 +323,9 @@ const getNewGridFinish = (grid, row, col) => {
 const generatePathList = (finishNode) => {
   const path = [];
   var currentNode = finishNode;
-
+  if (finishNode.parent.length === 0) {
+    return [];
+  }
   while (!currentNode.isStart) {
     path.push(currentNode);
     currentNode = currentNode.parent[0];
