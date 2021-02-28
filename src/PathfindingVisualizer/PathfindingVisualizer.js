@@ -27,6 +27,8 @@ class PathfindingVisualizer extends React.Component {
   }
 
   handleOnMouseDown(row, col) {
+    const newGrid1 = resetGrid(this.state.nodes);
+    this.setState({ nodes: newGrid1 });
     var newGrid;
     if (!this.state.startChosen) {
       newGrid = getNewGridStart(this.state.nodes, row, col);
@@ -38,14 +40,16 @@ class PathfindingVisualizer extends React.Component {
         startCol: col,
       });
     } else if (!this.state.endChosen) {
-      newGrid = getNewGridFinish(this.state.nodes, row, col);
-      this.setState({
-        nodes: newGrid,
-        mouseIsPressed: true,
-        endChosen: true,
-        endRow: row,
-        endCol: col,
-      });
+      if (row !== this.state.startRow && col !== this.state.startCol) {
+        newGrid = getNewGridFinish(this.state.nodes, row, col);
+        this.setState({
+          nodes: newGrid,
+          mouseIsPressed: true,
+          endChosen: true,
+          endRow: row,
+          endCol: col,
+        });
+      }
     } else {
       const newGrid = getNewGridWall(this.state.nodes, row, col);
       this.setState({ nodes: newGrid, mouseIsPressed: true });
@@ -57,28 +61,9 @@ class PathfindingVisualizer extends React.Component {
   }
 
   handleOnMouseEnter(row, col) {
-    if (!this.state.mouseIsPressed) return;
-    var newGrid;
-    if (!this.state.startChosen) {
-      newGrid = getNewGridStart(this.state.nodes, row, col);
-      this.setState({
-        nodes: newGrid,
-        mouseIsPressed: true,
-        startChosen: true,
-      });
-    } else if (!this.state.endChosen) {
-      newGrid = getNewGridFinish(this.state.nodes, row, col);
-      this.setState({
-        nodes: newGrid,
-        mouseIsPressed: true,
-        endChosen: true,
-        endRow: row,
-        endCol: col,
-      });
-    } else {
-      const newGrid = getNewGridWall(this.state.nodes, row, col);
-      this.setState({ nodes: newGrid, mouseIsPressed: true });
-    }
+    if (!this.state.mouseIsPressed || !this.state.endChosen) return;
+    const newGrid = getNewGridWall(this.state.nodes, row, col);
+    this.setState({ nodes: newGrid, mouseIsPressed: true });
   }
 
   animate(path, shortestPath) {
