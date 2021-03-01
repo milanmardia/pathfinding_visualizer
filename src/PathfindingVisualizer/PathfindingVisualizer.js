@@ -40,16 +40,17 @@ class PathfindingVisualizer extends React.Component {
         startCol: col,
       });
     } else if (!this.state.endChosen) {
-      if (row !== this.state.startRow && col !== this.state.startCol) {
-        newGrid = getNewGridFinish(this.state.nodes, row, col);
-        this.setState({
-          nodes: newGrid,
-          mouseIsPressed: true,
-          endChosen: true,
-          endRow: row,
-          endCol: col,
-        });
+      if (row === this.state.startRow && col === this.state.startCol) {
+        return;
       }
+      newGrid = getNewGridFinish(this.state.nodes, row, col);
+      this.setState({
+        nodes: newGrid,
+        mouseIsPressed: true,
+        endChosen: true,
+        endRow: row,
+        endCol: col,
+      });
     } else {
       const newGrid = getNewGridWall(this.state.nodes, row, col);
       this.setState({ nodes: newGrid, mouseIsPressed: true });
